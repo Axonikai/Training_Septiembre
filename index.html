@@ -86,7 +86,7 @@ textarea{font-family:system-ui;resize:vertical}
 </style>
 </head>
 <body>
-
+ 
 <div id="loading" class="loading">⚡ Conectando...</div>
 <div id="login-page" class="login-wrap" style="display:none">
  <h1>AXONIK</h1>
@@ -96,7 +96,7 @@ textarea{font-family:system-ui;resize:vertical}
   Entrar con Google
  </button>
 </div>
-
+ 
 <div id="app" style="display:none">
  <div class="hd">
   <div class="hd-r">
@@ -121,7 +121,7 @@ textarea{font-family:system-ui;resize:vertical}
   <button onclick="switchTab(4)"><span class="ic">📅</span>Sept</button>
  </div>
 </div>
-
+ 
 <script>
 // ═══════════════════════════════════════
 // FIREBASE INIT
@@ -139,13 +139,15 @@ const db=firebase.firestore();
 db.enablePersistence().catch(()=>{});
 let uid=null;
 let cache={};
-
+ 
 // ─── AUTH ───
 function loginGoogle(){
  auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
 }
 function logout(){auth.signOut();}
-
+ 
+auth.getRedirectResult().catch(()=>{});
+ 
 auth.onAuthStateChanged(user=>{
  document.getElementById('loading').style.display='none';
  if(user){
@@ -160,10 +162,10 @@ auth.onAuthStateChanged(user=>{
   document.getElementById('app').style.display='none';
  }
 });
-
+ 
 // ─── FIRESTORE HELPERS ───
 function docRef(date){return db.collection('users').doc(uid).collection('days').doc(date);}
-
+ 
 async function loadAllDays(){
  cache={};
  try{
@@ -172,15 +174,15 @@ async function loadAllDays(){
  }catch{}
  render();
 }
-
+ 
 function gdd(k){return cache[k]||{supps:{},meals:{},sessions:[],body:{},notes:'',exDone:{}};}
-
+ 
 function sdd(k,d){
  cache[k]=d;
  docRef(k).set(d,{merge:true}).catch(()=>{});
  render();
 }
-
+ 
 // ═══════════════════════════════════════
 // DATA
 // ═══════════════════════════════════════
@@ -189,14 +191,14 @@ const dk=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 let td=dk(new Date());
 let selDate=td;
 let curTab=0;
-
+ 
 const SUPPS=[
  {id:'lthea',nm:'L-Theanine 200mg',desc:'☀️ Mañana con desayuno'},
  {id:'creat',nm:'Creatina 5g',desc:'☀️ Mañana con desayuno'},
  {id:'omega',nm:'Omega-3 IFOS',desc:'☀️ Mañana con desayuno'},
  {id:'mag',nm:'Magnesio 350mg',desc:'🌙 Noche, 1h post-cena'},
 ];
-
+ 
 const BK=[
  {id:'b1',nm:'Tostadas + Huevo + Guacamole',ds:'2 tostadas integrales, 2 huevos, guacamole, leche soja',kc:620,pr:32,gr:28,ch:52},
  {id:'b2',nm:'Tostadas + Atún + Huevo',ds:'2 tostadas integrales, lata atún, huevo duro, leche soja',kc:580,pr:42,gr:18,ch:48},
@@ -205,7 +207,7 @@ const BK=[
  {id:'b5',nm:'Huevo + Atún + Guacamole',ds:'2 huevos, lata atún, guacamole, leche soja',kc:560,pr:44,gr:30,ch:12},
  {id:'b6',nm:'Carne Mechada + Huevo + Yogur',ds:'Carne mechada 80g, huevo duro, yogur, leche soja',kc:510,pr:40,gr:22,ch:28},
 ];
-
+ 
 const DN=[
  {id:'d1',nm:'Verduras + Pollo Curry',ds:'Bolsa verduras Mercadona, pechuga 250g, curry, soja',kc:480,pr:52,gr:10,ch:28},
  {id:'d2',nm:'Atún Plancha + Verduras',ds:'Atún fresco 200g, bolsa verduras, AOVE',kc:420,pr:48,gr:14,ch:18},
@@ -218,18 +220,18 @@ const DN=[
  {id:'d9',nm:'Verduras Curry + Huevos',ds:'Bolsa verduras, 3 huevos, curry, soja',kc:400,pr:30,gr:22,ch:24},
  {id:'d10',nm:'Pollo Soja + Wok',ds:'Pollo 250g tiras, verduras wok Mercadona, soja',kc:460,pr:50,gr:12,ch:22},
 ];
-
+ 
 const SP=[
  {id:'padel',icon:'🎾',name:'Pádel',cpm:8},{id:'run',icon:'🏃',name:'Running',cpm:10},
  {id:'walk',icon:'🥾',name:'Caminata',cpm:4},{id:'surf',icon:'🏄',name:'Surf',cpm:7},
  {id:'kite',icon:'🪁',name:'Kitesurf',cpm:9},{id:'swim',icon:'🏊',name:'Natación',cpm:8},
  {id:'ellip',icon:'🔄',name:'Elíptica',cpm:7},{id:'other',icon:'🔥',name:'Otro',cpm:6},
 ];
-
+ 
 // ─── PLAN SEPT ───
 function ex(n,s,t,r){return{n,s:s||'',t:t||'',r:r||''};}
 const SEPT={};
-
+ 
 // S1-6: RENDIMIENTO
 SEPT['2026-09-01']={t:'Fuerza Pesada',tag:'RENDIMIENTO',tc:'rd',run:'30min fartlek AM',pd:null,
  ex:[ex('Búlgara 2 mancuernas','5×6/lado','Controlado','90s'),ex('Press suelo 2 manc','5×8','3-1-1-0','90s'),ex('RDL 2 mancuernas','5×8','3-1-1-0','90s'),ex('Remo prono 2 manc','5×8','2-1-2-0','75s'),ex('Farmer walk','3×30m','—','60s')]};
@@ -241,7 +243,7 @@ SEPT['2026-09-04']={t:'🏆 TEST FINAL',tag:'RENDIMIENTO',tc:'rd',run:'3km Time 
  ex:[ex('50 Sentadillas','For Time'),ex('40 Flexiones'),ex('30 Burpees'),ex('20 RDL mancuernas'),ex('10 Clean+press manc'),ex('───────'),ex('3km Time Trial','Apunta tiempo')]};
 SEPT['2026-09-05']={t:'🎾 Pádel',tag:'PÁDEL',tc:'ac',run:null,pd:'9:00 · 90min',ex:[ex('Pádel 9:00','90 min')]};
 SEPT['2026-09-06']={t:'🏖️ Descanso',tag:'DESCANSO',tc:'gn',run:null,pd:null,ex:[ex('Recuperación completa'),ex('Movilidad opcional','15-20min')]};
-
+ 
 // S7-13: CICLO A
 SEPT['2026-09-07']={t:'Pierna + Core (HB S3)',tag:'CICLO A',tc:'ac',run:null,pd:'21:00',
  ex:[ex('Circuito 5 rondas:','','','90s/ronda'),ex('Sentadilla goblet ×15'),ex('Zancada inversa goma ×10/l'),ex('Hip thrust 1p cama ×12/l'),ex('Step-up cama ×10/l'),ex('Core 3r: Plancha 45s+Bicycle 20+Dead bug 10/l','3 rondas')]};
@@ -255,7 +257,7 @@ SEPT['2026-09-11']={t:'Empuje Funcional (HB S1)',tag:'CICLO A',tc:'ac',run:null,
  ex:[ex('EMOM 15min (3×5):'),ex('Min 1: Press suelo ×10','3 rondas','','EMOM'),ex('Min 2: Flex explosivas ×10'),ex('Min 3: Press hombro ×10'),ex('Min 4: Pull-apart ×15'),ex('Min 5: Flex cerrada ×12'),ex('Tabata Flex 4min','8×20/10'),ex('Elíptica 20min opcional')]};
 SEPT['2026-09-12']={t:'🎾 Pádel',tag:'PÁDEL',tc:'ac',run:null,pd:'9:00 · 90min',ex:[ex('Pádel 9:00','90 min')]};
 SEPT['2026-09-13']={t:'🏖️ Descanso',tag:'DESCANSO',tc:'gn',run:null,pd:null,ex:[ex('Descanso / Caminata suave')]};
-
+ 
 // S14-20: CICLO B — Bodyweight
 SEPT['2026-09-14']={t:'Full Body A: Fundamentos',tag:'CICLO B',tc:'bl',run:null,pd:'21:00',
  ex:[ex('Sentadilla profunda','4×15','2-1-1-0','60s'),ex('Flexiones','4×12','2-1-1-0','60s'),ex('Hip thrust cama','3×15','2-2-1-0','45s'),ex('Pike push-up','3×10','2-1-1-0','45s'),ex('Zancada reversa','3×12/p','','45s'),ex('Plancha','3×40s','Iso','30s'),ex('Crunch bicicleta','3×20','Lento','30s')]};
@@ -268,7 +270,7 @@ SEPT['2026-09-17']={t:'Full Body D: Circuito',tag:'CICLO B',tc:'bl',run:'30min f
 SEPT['2026-09-18']={t:'Descanso Activo',tag:'CICLO B',tc:'bl',run:null,pd:null,ex:[ex('Movilidad articular','10min'),ex('Estiramientos','10min'),ex('Caminata suave','20-30min')]};
 SEPT['2026-09-19']={t:'🎾 Pádel',tag:'PÁDEL',tc:'ac',run:null,pd:'9:00 · 90min',ex:[ex('Pádel 9:00','90 min')]};
 SEPT['2026-09-20']={t:'🏖️ Descanso',tag:'DESCANSO',tc:'gn',run:null,pd:null,ex:[ex('Descanso')]};
-
+ 
 // S21-27: CICLO C — Mixto intensidad
 SEPT['2026-09-21']={t:'Pierna + Core (HB S3)',tag:'CICLO C',tc:'pu',run:null,pd:'21:00',
  ex:[ex('Circuito 5 rondas:','','','90s'),ex('Sentadilla goblet ×15'),ex('Zancada goma ×10/l'),ex('Hip thrust 1p ×12/l'),ex('Step-up ×10/l'),ex('Core 3r: Plancha 50s+Bicycle 25+Dead bug 12/l','3 rondas')]};
@@ -282,7 +284,7 @@ SEPT['2026-09-25']={t:'🔥 THE BEAST (HB S5)',tag:'CICLO C',tc:'rd',run:null,pd
  ex:[ex('6 RONDAS FOR TIME:'),ex('10 Burpees','6 rondas','For Time'),ex('15 Sent. con manc'),ex('10 Flexiones'),ex('15 RDL manc'),ex('20 Mountain climbers'),ex('10 Remo goma/brazo')]};
 SEPT['2026-09-26']={t:'🎾 Pádel',tag:'PÁDEL',tc:'ac',run:null,pd:'9:00 · 90min',ex:[ex('Pádel 9:00','90 min')]};
 SEPT['2026-09-27']={t:'🏖️ Descanso',tag:'DESCANSO',tc:'gn',run:null,pd:null,ex:[ex('Descanso completo')]};
-
+ 
 // S28-30: CICLO D
 SEPT['2026-09-28']={t:'Pierna + Core (HB S3)',tag:'CICLO D',tc:'or',run:null,pd:'21:00',
  ex:[ex('Circuito 5 rondas:','','','90s'),ex('Sent. goblet ×15'),ex('Zancada goma ×10/l'),ex('Hip thrust 1p ×12/l'),ex('Step-up ×10/l'),ex('Core 3r: Plancha 50s+Bicycle+Dead bug','3 rondas')]};
@@ -290,12 +292,12 @@ SEPT['2026-09-29']={t:'Supersets Tren Superior',tag:'CICLO D',tc:'or',run:'30min
  ex:[ex('SS1: Flex explosiva + Remo','4×10+10','','75s'),ex('SS2: Press hombro + Curl','4×12+15','','60s'),ex('SS3: Flex cerrada + Pull-apart','3×12+15','','60s'),ex('SS4: Fondos + Plancha lat','3×15+30s/l','','45s')]};
 SEPT['2026-09-30']={t:'Potencia Híbrida (HB S4)',tag:'CICLO D',tc:'or',run:null,pd:null,
  ex:[ex('Complex 4 rondas:','','','2min'),ex('6 RDL+6 Remo+6 Clean+6 Press+6 Squat','4 rondas'),ex('HIIT 12min 40/20 ×3','3 rondas')]};
-
+ 
 // Meal rotation
 const bR=['b1','b2','b3','b4','b5','b6'],dR=['d1','d2','d3','d4','d5','d6','d7','d8','d9','d10'];
 const MEALS={};
 for(let i=1;i<=30;i++)MEALS['2026-09-'+pad(i)]={b:bR[(i-1)%6],d:dR[(i-1)%10]};
-
+ 
 const BF=[
  {id:'peso',lb:'Peso (kg)',ref:'90-95 obj',c:'var(--ac)'},
  {id:'imc',lb:'IMC',ref:'< 27',c:'var(--pu)'},
@@ -304,7 +306,7 @@ const BF=[
  {id:'agua',lb:'Agua (%)',ref:'50-65%',c:'var(--bl)'},
  {id:'bmr',lb:'MB (kcal)',ref:'~2050',c:'var(--yw)'},
 ];
-
+ 
 // Rutinas biblioteca
 const R15=[
  {d:1,t:'Full Body A: Fundamentos',f:'Series · 40min',ex:[{n:'Sentadilla profunda',s:'4×15',t:'2-1-1-0',r:'60s'},{n:'Flexiones',s:'4×12',t:'2-1-1-0',r:'60s'},{n:'Hip thrust cama',s:'3×15',t:'2-2-1-0',r:'45s'},{n:'Pike push-up',s:'3×10',t:'2-1-1-0',r:'45s'},{n:'Zancada reversa',s:'3×12/p',t:'',r:'45s'},{n:'Plancha',s:'3×40s',t:'Iso',r:'30s'},{n:'Crunch bicicleta',s:'3×20',t:'Lento',r:'30s'}]},
@@ -320,19 +322,19 @@ const HBX=[
  {d:4,t:'Potencia Híbrida (S4)',f:'Complex+HIIT · 50min',ex:[{n:'Complex 4r:',s:'',r:'2min'},{n:'6RDL+6Remo+6Clean+6Press+6Squat',s:'4 rondas'},{n:'HIIT 12min',s:'40/20 ×3'}]},
  {d:5,t:'THE BEAST (S5)',f:'For Time · 35-45min',ex:[{n:'6 RONDAS FOR TIME:'},{n:'10 Burpees',s:'6r'},{n:'15 Sent. manc'},{n:'10 Flex'},{n:'15 RDL'},{n:'20 Mountain'},{n:'10 Remo/brazo'}]},
 ];
-
+ 
 // ═══════════════════════════════════════
 // RENDER
 // ═══════════════════════════════════════
 const $=id=>document.getElementById(id);
-
+ 
 function switchTab(n){
  for(let i=0;i<5;i++)$('t'+i).style.display=i===n?'':'none';
  curTab=n;
  document.querySelectorAll('.nav button').forEach((b,i)=>b.className=i===n?'on':'');
  render();
 }
-
+ 
 function updateHeader(){
  const dd=gdd(selDate),ml=dd.meals||{},pl=MEALS[selDate]||{};
  const bId=ml.breakfast||pl.b,dId=ml.dinner||pl.d;
@@ -342,7 +344,7 @@ function updateHeader(){
  $('hd-kc').style.color=kc?'':'var(--t3)';
  $('hd-pr').textContent=kc?pr+'g prot':'';
 }
-
+ 
 function renderDateBar(){
  let h='';
  for(let off=-2;off<=2;off++){
@@ -352,21 +354,21 @@ function renderDateBar(){
  }
  $('date-bar').innerHTML=h;
 }
-
+ 
 function render(){
  if(!uid)return;
  renderDateBar();updateHeader();
  const fns=[renderToday,renderTrain,renderMeals,renderSamsung,renderSept];
  fns[curTab]();
 }
-
+ 
 function renderToday(){
  const dd=gdd(selDate),plan=SEPT[selDate];
  const pl=MEALS[selDate]||{},mDone=dd.meals||{};
  const bId=mDone.breakfast||pl.b,dId=mDone.dinner||pl.d;
  const b=BK.find(x=>x.id===bId),d=DN.find(x=>x.id===dId);
  let h='';
-
+ 
  if(plan){
   h+=`<span class="lb">Entrenamiento de hoy</span><div class="wk-card">`;
   h+=`<div class="row"><h3>${plan.t}</h3><span class="tag tag-${plan.tc}">${plan.tag}</span></div>`;
@@ -381,21 +383,21 @@ function renderToday(){
   });
   h+=`</div></div>`;
  }
-
+ 
  h+=`<span class="lb">Suplementos</span><div class="cd">`;
  SUPPS.forEach(s=>{
   const done=(dd.supps||{})[s.id];
   h+=`<div class="ex-row" onclick="togSupp('${s.id}')" style="cursor:pointer"><div class="chk ${done?'on':''}">${done?'✓':''}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;${done?'text-decoration:line-through;opacity:.5':''}">${s.nm}</div><div style="font-size:10px;color:var(--t3)">${s.desc}</div></div></div>`;
  });
  h+=`</div>`;
-
+ 
  h+=`<span class="lb">Comidas</span><div class="cd">`;
  h+=`<div style="margin-bottom:8px"><div style="font-size:10px;color:var(--t3)">☀️ DESAYUNO</div><div style="font-size:13px;font-weight:600">${b?b.nm:'—'}</div>${b?`<div style="font-size:10px;color:var(--t2)">${b.kc} kcal · ${b.pr}g prot</div>`:''}</div>`;
  h+=`<div style="border-top:1px solid var(--c2);padding-top:8px"><div style="font-size:10px;color:var(--t3)">🌙 COMIDA 19:00</div><div style="font-size:13px;font-weight:600">${d?d.nm:'—'}</div>${d?`<div style="font-size:10px;color:var(--t2)">${d.kc} kcal · ${d.pr}g prot</div>`:''}</div>`;
  const tk=(b?b.kc:0)+(d?d.kc:0),tp=(b?b.pr:0)+(d?d.pr:0);
  if(tk)h+=`<div class="totals"><div class="row"><span style="font-size:11px;font-weight:700;color:var(--ac)">TOTAL</span><span style="font-family:monospace;font-size:11px;color:var(--ac)">${tk} kcal · ${tp}g prot</span></div></div>`;
  h+=`</div>`;
-
+ 
  h+=`<span class="lb">Actividad extra</span>`;
  (dd.sessions||[]).forEach((s,i)=>{
   const sp=SP.find(x=>x.id===s.sport);
@@ -405,7 +407,7 @@ function renderToday(){
  h+=`<span class="lb" style="margin-top:14px">Notas</span><textarea id="nta" rows="2" placeholder="Energía, sueño..." onchange="saveNotes(this.value)" style="width:100%">${dd.notes||''}</textarea>`;
  $('t0').innerHTML=h;
 }
-
+ 
 function renderTrain(){
  let h=`<span class="lb">Septiembre — Día a día</span>`;
  for(let i=1;i<=30;i++){
@@ -415,16 +417,16 @@ function renderTrain(){
   if(p.run||p.pd)h+=`<div style="font-size:10px;color:var(--t3);margin-top:3px">${p.run?'🏃 '+p.run+' ':''}${p.pd?'🎾 '+p.pd:''}</div>`;
   h+=`</div>`;
  }
-
+ 
  h+=`<span class="lb" style="margin-top:14px">Biblioteca</span>`;
  [{t:'15d',nm:'🏠 15 Días Sin Material',s:'Suelo+cama'},{t:'hb',nm:'🏋️ Home Box',s:'Mancuernas+Gomas'}].forEach(r=>{
   h+=`<div class="cd" style="cursor:pointer" onclick="showLib('${r.t}')"><div class="row"><div><div style="font-size:14px;font-weight:700">${r.nm}</div><div style="font-size:11px;color:var(--t2)">${r.s}</div></div><span style="color:var(--ac)">→</span></div></div>`;
  });
-
+ 
  h+=`<span class="lb">Running</span><div class="cd"><div style="font-size:12px;line-height:1.8"><strong style="color:var(--ac)">Mar/Jue 6:30 AM</strong> · 30min intervalos/fartlek<br><strong style="color:var(--ac)">Progresión:</strong> S1 suave → S2 5×1'/1' → S3 fartlek → S4 3km test</div></div>`;
  $('t1').innerHTML=h;
 }
-
+ 
 function showLib(type){
  const list=type==='15d'?R15:HBX;
  let h=`<button onclick="renderTrain()" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:700;cursor:pointer;padding:0;margin-bottom:10px">← Volver</button>`;
@@ -441,7 +443,7 @@ function showLib(type){
  });
  $('t1').innerHTML=h;
 }
-
+ 
 function renderMeals(){
  const dd=gdd(selDate),pl=MEALS[selDate]||{},mDone=dd.meals||{};
  const bId=mDone.breakfast||pl.b,dId=mDone.dinner||pl.d;
@@ -460,13 +462,13 @@ function renderMeals(){
  if(tk)h+=`<div class="cd" style="background:#0d201e;border-color:#163330"><div class="row" style="margin-bottom:4px"><span style="font-size:12px;font-weight:800;color:var(--ac)">TOTAL</span><span style="font-size:14px;font-weight:800;font-family:monospace;color:var(--ac)">${tk} kcal</span></div><div class="row" style="font-size:11px;color:var(--t2)"><span>P:${tp}g</span><span>G:${(b?b.gr:0)+(d?d.gr:0)}g</span><span>C:${(b?b.ch:0)+(d?d.ch:0)}g</span></div><div style="margin-top:6px;font-size:10px;color:var(--gn)">🎯 Déficit ~${2800-tk} kcal</div></div>`;
  $('t2').innerHTML=h;
 }
-
+ 
 function renderSamsung(){
  const dd=gdd(selDate),bd=dd.body||{};
  let h=`<span class="lb">📱 Samsung Watch — ${selDate.slice(5)}</span><div class="cd"><div class="col2">`;
  BF.forEach(f=>{h+=`<div><div style="font-size:9px;font-weight:800;color:${f.c};text-transform:uppercase;letter-spacing:1px;margin-bottom:3px">${f.lb}</div><input type="number" step="0.1" value="${bd[f.id]||''}" placeholder="${f.ref}" onchange="saveBody('${f.id}',this.value)"><div style="font-size:8px;color:var(--t3);margin-top:2px">${f.ref}</div></div>`;});
  h+=`</div></div>`;
-
+ 
  h+=`<span class="lb">Evolución</span>`;
  const allK=Object.keys(cache).filter(k=>cache[k].body&&cache[k].body.peso).sort();
  if(allK.length<2){h+=`<div class="cd" style="color:var(--t3);font-size:12px;text-align:center">2+ registros para gráficos</div>`;}
@@ -484,7 +486,7 @@ function renderSamsung(){
  h+=`<span class="lb">Rangos</span><div class="cd" style="font-size:11px;color:var(--t2);line-height:2">Peso: <span style="color:var(--ac);font-weight:700">90-95</span> · IMC: <span style="color:var(--ac)">&lt;27</span> · Grasa: <span style="color:var(--gn)">15-20%</span> · Músculo: <span style="color:var(--gn)">&gt;38kg</span> · Agua: <span style="color:var(--gn)">50-65%</span> · MB: <span style="color:var(--ac)">~2050</span></div>`;
  $('t3').innerHTML=h;
 }
-
+ 
 function renderSept(){
  const dow1=new Date(2026,8,1).getDay();
  let h=`<span class="lb">Septiembre 2026</span><div class="cal">`;
@@ -496,7 +498,7 @@ function renderSept(){
   h+=`<button class="dy${k===td?' today':''}${k===selDate?' sel':''}${has?' has':''}" onclick="selDate='${k}';switchTab(0)">${i}</button>`;
  }
  h+=`</div>`;
-
+ 
  const p=SEPT[selDate],pl=MEALS[selDate]||{};
  if(p){
   h+=`<span class="lb">Plan del día</span><div class="wk-card"><div class="row"><h3>${p.t}</h3><span class="tag tag-${p.tc}">${p.tag}</span></div>`;
@@ -510,7 +512,7 @@ function renderSept(){
  if(pl.b){const b=BK.find(x=>x.id===pl.b),d=DN.find(x=>x.id===pl.d);
   h+=`<div class="cd"><div style="font-size:10px;color:var(--or);font-weight:700">☀️ Desayuno</div><div style="font-size:12px">${b?b.nm:''} <span style="color:var(--t2);font-size:10px">${b?b.kc+'kcal':''}</span></div><div style="border-top:1px solid var(--c2);margin-top:6px;padding-top:6px"><div style="font-size:10px;color:var(--or);font-weight:700">🌙 19:00</div><div style="font-size:12px">${d?d.nm:''} <span style="color:var(--t2);font-size:10px">${d?d.kc+'kcal':''}</span></div></div></div>`;
  }
-
+ 
  h+=`<span class="lb">Historial</span>`;
  Object.keys(cache).sort().reverse().slice(0,10).forEach(k=>{
   const d=cache[k],sc=(d.sessions||[]).length,su=Object.values(d.supps||{}).filter(Boolean).length;
@@ -518,7 +520,7 @@ function renderSept(){
  });
  $('t4').innerHTML=h;
 }
-
+ 
 // ═══════════════════════════════════════
 // ACTIONS
 // ═══════════════════════════════════════
@@ -527,7 +529,7 @@ function togEx(i){const dd=gdd(selDate);dd.exDone=dd.exDone||{};dd.exDone['e'+i]
 function pickMeal(slot,id){const dd=gdd(selDate);dd.meals=dd.meals||{};dd.meals[slot]=id;sdd(selDate,dd);}
 function saveBody(f,v){const dd=gdd(selDate);dd.body=dd.body||{};dd.body[f]=parseFloat(v)||'';sdd(selDate,dd);}
 function saveNotes(v){const dd=gdd(selDate);dd.notes=v;sdd(selDate,dd);}
-
+ 
 function showSportAdd(){
  const el=$('spa');if(!el)return;
  window._sp='padel';
@@ -537,7 +539,7 @@ function showSportAdd(){
  h+=`<div style="display:flex;gap:6px"><button class="btn-s" onclick="addSess()">Guardar</button><button class="btn-s btn-o" onclick="render()">Cancelar</button></div></div>`;
  el.innerHTML=h;
 }
-
+ 
 function addSess(){
  const dd=gdd(selDate);dd.sessions=dd.sessions||[];
  const dur=parseInt($('spd').value)||60,int=parseInt($('spi').value)||2;
