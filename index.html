@@ -142,10 +142,7 @@ let cache={};
 
 // ─── AUTH ───
 function loginGoogle(){
- auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>{
-  // fallback redirect for mobile
-  auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
- });
+ auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
 }
 function logout(){auth.signOut();}
 
